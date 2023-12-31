@@ -31,7 +31,11 @@ public class WorkHourService {
 
     public void createHours(CreateHoursRequest request) {
         User user = userRepository.getReferenceById(1L);
-        WorkHour workHour = new WorkHour(request.start(), request.end(), user);
+        WorkHour workHour = WorkHour.builder() //zastosowalem tutaj builder pattern o ktorym mowilem wczesniej na zajeciach
+                .start(request.start())
+                .end(request.end())
+                .user(user)
+                .build();
         workHourRepository.save(workHour);
 
     }
