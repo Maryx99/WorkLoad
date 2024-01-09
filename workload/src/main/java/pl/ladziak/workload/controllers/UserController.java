@@ -1,9 +1,8 @@
 package pl.ladziak.workload.controllers;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.ladziak.workload.dto.UserDto;
+import pl.ladziak.workload.request.UpdateUsersEmailRequest;
 import pl.ladziak.workload.services.UserService;
 
 import java.util.List;
@@ -20,5 +19,10 @@ public class UserController {
     @GetMapping
     public List<UserDto> getUsers() {
         return userService.getUsers();
+    }
+
+    @PutMapping("/{id}")
+    public void updateUsersEmail(@PathVariable Long id, @RequestBody UpdateUsersEmailRequest request) {
+        userService.updateUserEmail(id, request);
     }
 }

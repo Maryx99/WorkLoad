@@ -2,6 +2,7 @@ package pl.ladziak.workload.services;
 
 import org.springframework.stereotype.Service;
 import pl.ladziak.workload.dto.UserDto;
+import pl.ladziak.workload.dto.WorkHourDto;
 import pl.ladziak.workload.models.User;
 import pl.ladziak.workload.models.WorkHour;
 import pl.ladziak.workload.repositories.UserRepository;
@@ -20,9 +21,15 @@ public class WorkHourService {
         this.workHourRepository = workHourRepository;
     }
 
-    public List<UserDto> getHours() {
-        return userRepository.findAll().stream()
-                .map(this::mapToUserDto)
+    public List<WorkHourDto> getWorkHoursCurrentUser(Long id) {
+        List<WorkHour> workHoursByUserEmail = workHourRepository.getWorkHoursByUserEmail(id);
+        return workHoursByUserEmail.stream()
+                .map(workHour -> WorkHourDto.builder()
+                        .id(workHour.getId())
+                        .start(workHour.getStart())
+                        .end(workHour.getEnd())
+                        .build())
+                //.collect)Colletors.toList())
                 .toList();
     }
     public UserDto mapToUserDto(User user) {

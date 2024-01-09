@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import pl.ladziak.workload.dto.UserDto;
 import pl.ladziak.workload.models.User;
 import pl.ladziak.workload.repositories.UserRepository;
+import pl.ladziak.workload.request.UpdateUsersEmailRequest;
 
 import java.util.List;
 
@@ -35,5 +36,12 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email) // uzywamy metody findByEmail
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("Username: %s not found.", email)));
         // jak user nie istnieje z danym emailem - wyrzucamy blad
+    }
+
+    public void updateUserEmail(Long id, UpdateUsersEmailRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("User with id %d not found.", id)));
+        user.setEmail((request.email()));
+        userRepository.save(user);
     }
 }
