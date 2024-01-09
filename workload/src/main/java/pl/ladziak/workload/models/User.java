@@ -1,21 +1,29 @@
 package pl.ladziak.workload.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name = "app_users")
-public class User {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder // zmieniam adnotacje na Lombok'a dla czytelnosci, mam nadzieje ze juz ci to dziala
+public class User implements UserDetails { // UserDetails pochodzi ze Spring Security, dostarcza on podstawowe informacje
+    // o uzytkowniku, na podstawie UserDetails odbywaja sie sprawdzenia czy dane uzytkownika sie zgadzaja
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstName;
     private String lastName;
+    @Column(unique = true)// dodalem constraint unique - co sprawia ze email musi byc unikalny
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
@@ -23,81 +31,41 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<WorkHour> workHours;
 
-    public Long getId() {
-        return id;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() { // get dla roli uzytkownika w systemie
+        // GrantedAuthority to sa po prostu role jakie ma uzytkownik
+        // SimpleGrantedAuthority to implementacja GrantedAuthority
+        // Konwencja w Springu jest taka ze kazda rola powinna miec prefix ROLE_
+        // dlatego jest ttutaj ROLE_ + role.name()
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
+    @Override
+    public String getUsername() { // ta metoda wskazuje za pomoca czego sie logujemy do systemu
+        // w naszym przypadku jest to email dlatego zwracamy email
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+
+    // kolejne 4 metody sa do zarzadzania kontem - aktywacji itp. nie planujemy sie tym bawic wiec dajemy
+    // ze konto od razu jest aktywowane, dlatego wszedzie zwracamy true
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public String getPassword() {
-        return password;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public List<WorkHour> getWorkHours() {
-        return workHours;
-    }
-
-    public void setWorkHours(List<WorkHour> workHours) {
-        this.workHours = workHours;
-    }
-
-    public User(Long id, String firstName, String lastName, String email, String password, Role role, List<WorkHour> workHours) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.workHours = workHours;
-    }
-
-    public User() {
-    }
-
-    public User(Long id, String firstName, String lastName, String email, String password, Role role) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.role = role;
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
