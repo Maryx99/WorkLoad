@@ -11,6 +11,8 @@ import pl.ladziak.workload.request.LoginRequest;
 import pl.ladziak.workload.request.RegisterRequest;
 import pl.ladziak.workload.response.LoginResponse;
 
+import java.util.UUID;
+
 @Service
 public record AuthenticationService(
         UserRepository userRepository,
@@ -20,6 +22,7 @@ public record AuthenticationService(
 
     public void registerUser(RegisterRequest request) { // rejestrujemy usera
         userRepository.save(User.builder() // mapujemy RegisterRequest na User (nasza encja)
+                .uuid(UUID.randomUUID().toString())
                 .firstName(request.firstName())
                 .lastName(request.lastName())
                 .email(request.email())

@@ -1,5 +1,6 @@
 package pl.ladziak.workload.services;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.ladziak.workload.dto.UserDto;
 import pl.ladziak.workload.dto.WorkHourDto;
@@ -12,14 +13,10 @@ import pl.ladziak.workload.request.CreateHoursRequest;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class WorkHourService {
     private final UserRepository userRepository;
     private final WorkHourRepository workHourRepository;
-
-    public WorkHourService(UserRepository userRepository, WorkHourRepository workHourRepository) {
-        this.userRepository = userRepository;
-        this.workHourRepository = workHourRepository;
-    }
 
     public List<WorkHourDto> getWorkHoursCurrentUser(Long id) {
         List<WorkHour> workHoursByUserEmail = workHourRepository.getWorkHoursByUserEmail(id);
@@ -29,11 +26,8 @@ public class WorkHourService {
                         .start(workHour.getStart())
                         .end(workHour.getEnd())
                         .build())
-                //.collect)Colletors.toList())
+                //.collect(Collectors.toList())
                 .toList();
-    }
-    public UserDto mapToUserDto(User user) {
-        return new UserDto(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getRole());
     }
 
     public void createHours(CreateHoursRequest request) {

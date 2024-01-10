@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
@@ -20,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 //klasa konfiguracyjna w ktorej konfigurujemy aspekty zwiazane z Security
 @Configuration // adnotacja ze Springa, inforuje ze jest to klasa informacyjna i beda tutaj obiekty oznaczone jako @Bean
 @EnableWebSecurity // wlaczamy security
+@EnableMethodSecurity // za pomoca tej adnotacji wlaczamy takie adnotacje jak @PreAuthorize @PostAuthorize
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
