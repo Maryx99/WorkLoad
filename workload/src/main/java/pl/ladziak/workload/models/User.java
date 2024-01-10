@@ -21,6 +21,12 @@ public class User implements UserDetails { // UserDetails pochodzi ze Spring Sec
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String uuid; // dodaje UUID - by wygenerowac UUID wystarczy wywolac UUID.randomUuid().toString()
+    // 0ba017f7-779c-4a68-9fb6-a6e5dd7516e5 - tak wyglada losowy UUID
+    // jest to po prostu losowy ciag znakow, w ktorym mamy praktycznie gwarancje ze przez cale zycie bedzie unikalny
+    // z tego co pamietam to musialoby sie generowac miliardy UUID na sekunde przez dlugie lata by bylo 50% szans ze sie
+    // trafi duplikat
+    // dodaje go zebysmy napisali aplikacje tez poprawnie
     private String firstName;
     private String lastName;
     @Column(unique = true)// dodalem constraint unique - co sprawia ze email musi byc unikalny

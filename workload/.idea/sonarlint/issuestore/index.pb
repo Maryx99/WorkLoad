@@ -25,12 +25,8 @@ s
 Csrc/main/java/pl/ladziak/workload/config/SecurityConfiguration.java,f\a\faf0ccdcee0a5d3a6858d0fbf368b3ccd9410aed
 {
 Ksrc/main/java/pl/ladziak/workload/controllers/AuthenticationController.java,6\4\6443a3e1d43fe98979c6560cf86223a58f71a64c
-t
-Dsrc/main/java/pl/ladziak/workload/request/AuthenticationRequest.java,e\a\ea09e4b5a3213de1f0e31c0901d9030dd88faced
 n
 >src/main/java/pl/ladziak/workload/request/RegisterRequest.java,8\6\86e1d24d4ee933b893f5bf485c2aa21345473b47
-v
-Fsrc/main/java/pl/ladziak/workload/response/AuthenticationResponse.java,5\b\5bf778dc82da529a48ceb2161d33c0451733aaa1
 u
 Esrc/main/java/pl/ladziak/workload/services/AuthenticationService.java,4\d\4dfc56af71fe5c2e1e9f57d2dc840b6f3f5b24aa
 q
@@ -39,3 +35,9 @@ k
 ;src/main/java/pl/ladziak/workload/request/LoginRequest.java,3\d\3d881c65263456f92b5d67e5ecbd5630f6c289f6
 m
 =src/main/java/pl/ladziak/workload/response/LoginResponse.java,b\5\b5a86c5d377887e30449cb44590a710c50d6f02f
+v
+Fsrc/main/java/pl/ladziak/workload/request/UpdateUsersEmailRequest.java,e\2\e245c0ad7485efa37107ffe5e9792ea31e3fec91
+f
+6src/main/java/pl/ladziak/workload/dto/WorkHourDto.java,1\4\14606d86f868f46303baf371342b7892632f2d5d
+b
+2src/main/java/pl/ladziak/workload/dto/UserDto.java,d\4\d42294d832a5a53cc81871f959853ddeb8d15b33

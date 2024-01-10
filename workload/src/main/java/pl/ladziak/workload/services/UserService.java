@@ -28,7 +28,7 @@ public class UserService implements UserDetailsService {
     }
 
     public UserDto mapToUserDto(User user) {
-        return new UserDto(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getRole());
+        return new UserDto(user.getId(), user.getUuid(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getRole());
     }
 
     @Override
