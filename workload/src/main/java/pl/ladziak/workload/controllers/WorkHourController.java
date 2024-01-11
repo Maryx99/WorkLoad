@@ -3,13 +3,13 @@ package pl.ladziak.workload.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import pl.ladziak.workload.dto.WorkHourDto;
 import pl.ladziak.workload.models.User;
 import pl.ladziak.workload.request.CreateHoursRequest;
 import pl.ladziak.workload.services.WorkHourService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -18,15 +18,19 @@ import java.util.List;
 public class WorkHourController {
     private final WorkHourService workHourService;
 
-    @GetMapping("/{id}")
-    //@PreAuthorize()
-    public List<WorkHourDto> getWorkHoursCurrentUser(@PathVariable Long id) {
-        return workHourService.getWorkHoursCurrentUser(id);
+    @GetMapping
+    public List<WorkHourDto> getWorkHoursCurrentUserByUserId(@AuthenticationPrincipal User loggedUser) {
+        return workHourService.getWorkHoursCurrentUserByUserId(loggedUser.getId());
     }
 
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public List<WorkHourDto> getWorkHoursForAllUsers(@RequestParam LocalDate from, @RequestParam LocalDate to) {
+        return workHourService.getWorkHoursForAllUsers(from, to);
+    }
     @PostMapping
-    public void createHours(@RequestBody CreateHoursRequest request) {
-        workHourService.createHours(request);
+    public void createHours(@AuthenticationPrincipal User loggedUser, @RequestBody CreateHoursRequest request) {
+        workHourService.createHours(loggedUser, request);
     }
 
     @GetMapping("/xx/{uuid}")

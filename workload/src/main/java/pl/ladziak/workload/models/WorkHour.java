@@ -16,6 +16,7 @@ public class WorkHour { //todo: przemyśleć akceptowanie i odrzucanie
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String uuid;
     @Column(name = "work_start")
     private LocalDateTime start;
     @Column(name = "work_end")
