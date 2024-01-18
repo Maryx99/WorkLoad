@@ -32,6 +32,7 @@ public class User implements UserDetails { // UserDetails pochodzi ze Spring Sec
     @Column(unique = true)// dodalem constraint unique - co sprawia ze email musi byc unikalny
     private String email;
     private String password;
+    private boolean isHired;
     @Enumerated(EnumType.STRING)
     private Role role;
     @OneToMany(mappedBy = "user")

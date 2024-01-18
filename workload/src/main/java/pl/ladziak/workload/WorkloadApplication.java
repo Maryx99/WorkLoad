@@ -22,6 +22,9 @@ public class WorkloadApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+		//todo: 2 userow 1 admin
+		//kilka workhour
+		//2-3 historia cen
 //		User userOne = new User(1L, "firstName", "lastName", "email", "passowrd", Role.USER);
 //		User userTwo = new User(2L, "firstName", "lastName", "email", "passowrd", Role.USER);
 //		User userThree = new User(3L, "firstName", "lastName", "email", "passowrd", Role.USER);

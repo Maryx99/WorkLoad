@@ -14,10 +14,10 @@ public interface WorkHourRepository extends JpaRepository<WorkHour, Long> {
             """)
     List<WorkHour> getWorkHoursByUserId(Long userId);
 
-    @Query(nativeQuery = true, value = """
-            select *
-            from _hours
-            inner join app_users on _hours.user
+    @Query(value = """
+            SELECT h FROM WorkHour h
+            JOIN FETCH h.user u
+            WHERE h.start BETWEEN :from AND :to
             """)
-    List<WorkHour> getWorkHoursByStartIsBetween(LocalDate from, LocalDate end);
+    List<WorkHour> getWorkHoursByStartIsBetween(LocalDateTime from, LocalDateTime to);
 }

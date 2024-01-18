@@ -18,9 +18,12 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private BigDecimal salary;
+    private String title;
     private String description;
-    private LocalDate date;
+    @Column(name = "order_from")
+    private LocalDate from;
+    @Column(name = "order_to")
+    private LocalDate to;
     @ManyToMany
     private Set<User> users;
 }

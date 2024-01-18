@@ -14,4 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // metoda do wyciagania usera po emailu
     Optional<User> findByEmail(String email);
+
+    Optional<User> findByUuid(String uuid);
 }

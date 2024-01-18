@@ -28,6 +28,7 @@ public record AuthenticationService(
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password())) // nalezy pamietac by zencodowac haslo
                 .role(request.role())
+                .isHired(true)
                 .build());
     }
 

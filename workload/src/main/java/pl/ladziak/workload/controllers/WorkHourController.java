@@ -5,6 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pl.ladziak.workload.dto.WorkHourDto;
+import pl.ladziak.workload.dto.WorkHourWithUserDto;
 import pl.ladziak.workload.models.User;
 import pl.ladziak.workload.request.CreateHoursRequest;
 import pl.ladziak.workload.services.WorkHourService;
@@ -25,7 +26,7 @@ public class WorkHourController {
 
     @GetMapping("/all")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public List<WorkHourDto> getWorkHoursForAllUsers(@RequestParam LocalDate from, @RequestParam LocalDate to) {
+    public List<WorkHourWithUserDto> getWorkHoursForAllUsers(@RequestParam LocalDate from, @RequestParam LocalDate to) {
         return workHourService.getWorkHoursForAllUsers(from, to);
     }
     @PostMapping
