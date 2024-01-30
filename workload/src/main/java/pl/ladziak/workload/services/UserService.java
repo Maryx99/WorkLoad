@@ -27,10 +27,6 @@ public class UserService implements UserDetailsService {
                 .toList();
     }
 
-    public UserDto mapToUserDto(User user) {
-        return new UserDto(user.getId(), user.getUuid(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getRole());
-    }
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email) // uzywamy metody findByEmail
@@ -43,5 +39,9 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("User with id %d not found.", id)));
         user.setEmail((request.email()));
         userRepository.save(user);
+    }
+
+    private UserDto mapToUserDto(User user) {
+        return new UserDto(user.getId(), user.getUuid(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getRole());
     }
 }

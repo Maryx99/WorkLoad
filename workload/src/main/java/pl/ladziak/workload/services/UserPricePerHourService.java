@@ -2,6 +2,7 @@ package pl.ladziak.workload.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.ladziak.workload.exceptions.UserNotHiredException;
 import pl.ladziak.workload.models.User;
 import pl.ladziak.workload.models.UserPricePerHourHistory;
 import pl.ladziak.workload.repositories.UserPricePerHourRepository;
@@ -21,7 +22,7 @@ public class UserPricePerHourService {
         User user = userRepository.findByUuid(userUuid)
                 .orElseThrow();//todo: zrobic wyjatek
         if(!user.isHired()){
-            throw new RuntimeException(); //todo: dodac wyjatek
+            throw new UserNotHiredException(String.format("User with uuid %s is not hired", userUuid)); //todo: dodac wyjatek
         }
 
         UserPricePerHourHistory userPricePerHourHistory = UserPricePerHourHistory.builder()

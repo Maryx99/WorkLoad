@@ -40,4 +40,10 @@ public class WorkHourController {
     public void aa(@AuthenticationPrincipal User principal, @PathVariable String uuid) {
         System.out.println(principal);
     }
+
+    @GetMapping("/test")
+    public void ff() {
+        System.out.println("TEST");
+        throw new RuntimeException("TEST");
+    }
 }
