@@ -6,17 +6,24 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 //klasa konfiguracyjna w ktorej konfigurujemy aspekty zwiazane z Security
 @Configuration // adnotacja ze Springa, inforuje ze jest to klasa informacyjna i beda tutaj obiekty oznaczone jako @Bean
@@ -30,12 +37,17 @@ public class SecurityConfiguration {
 
     @Bean // ta adnotacja sluzy za to zeby poinformowac Springa ze ma zarzadzac klasa oznaczona jako @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(CsrfConfigurer::disable) // wylaczamy CSRF
+        http.headers(configurer -> configurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
+
+        http
+                .csrf(CsrfConfigurer::disable) // wylaczamy CSRF
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/auth/**") // to oznacza, ze:
                         .permitAll()// wszystkie zapytania ktore maja w url poczatek '/auth/' sa dostepne dla kazdego uzytkownika
                         // nawet jak nie jest zalogowany - ma to sens bo chcemy udostepnic endpointy dla ludzi ktorzy
                         // a) chca stworzyc nowe konto
                         // b) chca sie zalogowac
+                        .requestMatchers("/").permitAll()
                         .anyRequest()
                         .authenticated()) // w dalszej czesci mowimy ze kazdy inny request ma byc zautentykowany - czyli musimy juz byc zalogowani
 
@@ -57,6 +69,16 @@ public class SecurityConfiguration {
         provider.setPasswordEncoder(passwordEncoder()); // ustawiamy tez passwordEncodera by porownac hash hasla z bazy
         // z haslem ktore dostajemy od usera ktory probuje sie zalogowac
         return provider;
+    }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedMethods(List.of("*"));
+        configuration.setAllowedHeaders(List.of("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean // sluzy do procesowania, autentykacji przekazanego usera
