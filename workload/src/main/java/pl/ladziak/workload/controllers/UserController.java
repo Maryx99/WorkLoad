@@ -1,5 +1,6 @@
 package pl.ladziak.workload.controllers;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,16 @@ public class UserController {
     @GetMapping
     public List<UserDto> getUsers() {
         return userService.getUsers();
+    }
+
+    @GetMapping("/{uuid}")
+    @PreAuthorize("#uuid == #principal.uuid")
+    public ResponseEntity<UserDto> getCurrentUser(@PathVariable String uuid, @AuthenticationPrincipal User principal) {
+        return ResponseEntity.ok(mapToUserDto(principal));
+    }
+
+    private UserDto mapToUserDto(User user) {
+        return new UserDto(user.getUuid(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getRole());
     }
 
     @PutMapping("/{id}")

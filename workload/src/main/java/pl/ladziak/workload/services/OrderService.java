@@ -13,6 +13,8 @@ import pl.ladziak.workload.response.OrderResponse;
 import pl.ladziak.workload.response.OrderWithUsersResponse;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -23,7 +25,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
 
-    public void createOrder(CreateOrderRequest request) {
+    public String createOrder(CreateOrderRequest request) {
         Order order = Order.builder()
                 .uuid(UUID.randomUUID().toString())
                 .title(request.title())
@@ -32,11 +34,17 @@ public class OrderService {
                 .to(request.to())
                 .build();
 
-        orderRepository.save(order);
+        return orderRepository.save(order).getUuid();
+
     }
 
     public OrderResponse getOrdersFromRange(User user, LocalDate from, LocalDate to) {
-        List<Order> results = orderRepository.getOrdersByUsersInAndFromAfterAndToBefore(Set.of(user), from, to);
+        List<Order> results = orderRepository.getOrdersByUsersInAndFromAfterAndToBefore(
+                Set.of(user),
+                LocalDateTime.of(from, LocalTime.MIN),
+                LocalDateTime.of(to, LocalTime.MAX)
+        );
+
         List<OrderDto> list = results.stream()
                 .map(result -> OrderDto.builder()
                         .uuid(result.getUuid())

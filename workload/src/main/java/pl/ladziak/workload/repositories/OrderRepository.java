@@ -6,12 +6,13 @@ import pl.ladziak.workload.models.Order;
 import pl.ladziak.workload.models.User;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    List<Order> getOrdersByUsersInAndFromAfterAndToBefore(Set<User> user, LocalDate from, LocalDate to);
+    List<Order> getOrdersByUsersInAndFromAfterAndToBefore(Set<User> user, LocalDateTime from, LocalDateTime to);
 
     Optional<Order> findByUuid(String uuid);
 

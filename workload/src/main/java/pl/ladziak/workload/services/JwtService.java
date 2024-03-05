@@ -8,6 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import pl.ladziak.workload.models.User;
 
 import java.security.Key;
 import java.util.Date;
@@ -25,8 +26,8 @@ public class JwtService {
     @Value("${jwt.secret.expiration}")
     private Long expiration; // po jakim czasie token powinien byc invalid, np po 10 minutach, obecnie jest to godzina
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(User userDetails) {
+        return generateToken(Map.of("uuid", userDetails.getUuid(), "role", userDetails.getRole()), userDetails);
     }
 
     public String generateToken(Map<String, Object> claims, UserDetails userDetails) {

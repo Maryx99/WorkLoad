@@ -7,6 +7,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pl.ladziak.workload.models.User;
 import pl.ladziak.workload.request.CreateOrderRequest;
+import pl.ladziak.workload.response.CreationSucessResponse;
 import pl.ladziak.workload.response.OrderResponse;
 import pl.ladziak.workload.response.OrderWithUsersResponse;
 import pl.ladziak.workload.services.OrderService;
@@ -21,8 +22,8 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public void createOrder(@RequestBody CreateOrderRequest request) {
-        orderService.createOrder(request);
+    public ResponseEntity<CreationSucessResponse> createOrder(@RequestBody CreateOrderRequest request) {
+        return ResponseEntity.ok(new CreationSucessResponse(orderService.createOrder(request)));
     }
 
     @GetMapping

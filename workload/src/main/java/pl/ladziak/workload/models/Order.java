@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -22,9 +23,9 @@ public class Order {
     private String title;
     private String description;
     @Column(name = "order_from")
-    private LocalDate from;
+    private LocalDateTime from;
     @Column(name = "order_to")
-    private LocalDate to;
+    private LocalDateTime to;
     @ManyToMany
     private Set<User> users;
 }
