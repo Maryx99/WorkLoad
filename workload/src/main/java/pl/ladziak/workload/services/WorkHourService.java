@@ -2,16 +2,19 @@ package pl.ladziak.workload.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.ladziak.workload.dto.WorkHourDto;
 import pl.ladziak.workload.dto.WorkHourWithUserDto;
 import pl.ladziak.workload.models.User;
 import pl.ladziak.workload.models.WorkHour;
 import pl.ladziak.workload.repositories.WorkHourRepository;
 import pl.ladziak.workload.request.CreateHoursRequest;
+import pl.ladziak.workload.response.WorkHourSummaryResponse;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,7 +30,7 @@ public class WorkHourService {
         List<WorkHour> workHoursByUserId = workHourRepository.getWorkHoursByUserId(id);
         return workHoursByUserId.stream()
                 .filter(workHour -> (workHour.getStart().isAfter(fromTime) || workHour.getStart().equals(fromTime))
-                && (workHour.getStart().isBefore(toTime) || workHour.getStart().isEqual(toTime)))
+                        && (workHour.getStart().isBefore(toTime) || workHour.getStart().isEqual(toTime)))
                 .map(workHour -> WorkHourDto.builder()
                         .uuid(workHour.getUuid())
                         .start(workHour.getStart())
@@ -48,6 +51,31 @@ public class WorkHourService {
 
     }
 
+    @Transactional
+    public List<WorkHourSummaryResponse> getSummary(LocalDate from, LocalDate to) {
+        List<WorkHour> workHours = workHourRepository.getWorkHoursByStartIsBetween(
+                LocalDateTime.of(from, LocalTime.MIN),
+                LocalDateTime.of(to, LocalTime.MAX));
+
+        List<User> users = workHours.stream()
+                .map(WorkHour::getUser)
+                .distinct()
+                .toList();
+
+        return users.stream()
+                .map(user -> {
+                    Long hours = workHours.stream()
+                            .filter(workHour -> workHour.getUser().getUuid().equals(user.getUuid()))
+                            .map(workHour -> ChronoUnit.HOURS.between(workHour.getStart(), workHour.getEnd()))
+                            .reduce(0L, Long::sum);
+                    return WorkHourSummaryResponse.builder()
+                            .userUuid(user.getUuid())
+                            .firstName(user.getFirstName())
+                            .lastName(user.getLastName())
+                            .workedHours(hours)
+                            .build();
+                }).toList();
+    }
 
     public List<WorkHourWithUserDto> getWorkHoursForAllUsers(LocalDate from, LocalDate to) {
         List<WorkHour> workHoursByStartIsBetween = workHourRepository.getWorkHoursByStartIsBetween(

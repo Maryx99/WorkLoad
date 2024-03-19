@@ -1,4 +1,4 @@
 
-G	java:S106$"+Replace this use of System.out by a logger.(ÄÔÔ8áŒñ¥Ï1
-s
-java:S1128"VRemove this unused import 'org.springframework.security.core.userdetails.UserDetails'.(ÊÁ¥8¹¤¦Ï1
+g	java:S112<"FDefine and throw a dedicated exception instead of using a generic one.(ëÃ’¡øÿÿÿÿ8‚€œµå1
+G	java:S106+"+Replace this use of System.out by a logger.(ÄÔÔ8”€œµå1
+G	java:S106;"+Replace this use of System.out by a logger.(Œå°È8•€œµå1
