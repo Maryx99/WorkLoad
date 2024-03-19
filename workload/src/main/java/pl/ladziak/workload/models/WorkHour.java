@@ -24,5 +24,6 @@ public class WorkHour { //todo: przemyśleć akceptowanie i odrzucanie
     private LocalDateTime end;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private User user;
+    private boolean accepted;
 }
 

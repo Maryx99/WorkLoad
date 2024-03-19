@@ -2,6 +2,7 @@ package pl.ladziak.workload.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.ladziak.workload.dto.OrderDto;
 import pl.ladziak.workload.dto.UserDto;
 import pl.ladziak.workload.models.Order;
@@ -38,8 +39,9 @@ public class OrderService {
 
     }
 
+    @Transactional
     public OrderResponse getOrdersFromRange(User user, LocalDate from, LocalDate to) {
-        List<Order> results = orderRepository.getOrdersByUsersInAndFromAfterAndToBefore(
+        List<Order> results = orderRepository.getOrdersByUsersInAndFromAfterAndFromBefore(
                 Set.of(user),
                 LocalDateTime.of(from, LocalTime.MIN),
                 LocalDateTime.of(to, LocalTime.MAX)
@@ -88,5 +90,34 @@ public class OrderService {
                         .map(user -> new UserDto(user.getUuid(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getRole()))
                         .toList())
                 .build();
+    }
+
+    @Transactional
+    public List<OrderWithUsersResponse> getAllOrdersWithUsers(User loggedUser, LocalDate from, LocalDate to) {
+        List<Order> orders = orderRepository.getOrdersByUsersInAndFromAfterAndFromBefore(
+                Set.of(loggedUser),
+                LocalDateTime.of(from, LocalTime.MIN),
+                LocalDateTime.of(to, LocalTime.MAX)
+        );
+
+        return orders.stream()
+                .map(order -> OrderWithUsersResponse.builder()
+                        .order(OrderDto.builder()
+                                .uuid(order.getUuid())
+                                .title(order.getTitle())
+                                .description(order.getDescription())
+                                .from(order.getFrom())
+                                .to(order.getTo())
+                                .build())
+                        .users(order.getUsers().stream()
+                                .map(user -> UserDto.builder()
+                                        .uuid(user.getUuid())
+                                        .firstName(user.getFirstName())
+                                        .lastName(user.getLastName())
+                                        .role(user.getRole())
+                                        .build())
+                                .toList())
+                        .build())
+                .toList();
     }
 }

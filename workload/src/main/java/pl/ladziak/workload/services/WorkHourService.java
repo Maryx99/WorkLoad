@@ -20,15 +20,20 @@ import java.util.UUID;
 public class WorkHourService {
     private final WorkHourRepository workHourRepository;
 
-    public List<WorkHourDto> getWorkHoursCurrentUserByUserId(Long id) {
+    public List<WorkHourDto> getWorkHoursCurrentUserByUserId(Long id, LocalDate from, LocalDate to) {
+
+        LocalDateTime fromTime = LocalDateTime.of(from, LocalTime.MIN);
+        LocalDateTime toTime = LocalDateTime.of(to, LocalTime.MAX);
         List<WorkHour> workHoursByUserId = workHourRepository.getWorkHoursByUserId(id);
         return workHoursByUserId.stream()
+                .filter(workHour -> (workHour.getStart().isAfter(fromTime) || workHour.getStart().equals(fromTime))
+                && (workHour.getStart().isBefore(toTime) || workHour.getStart().isEqual(toTime)))
                 .map(workHour -> WorkHourDto.builder()
                         .uuid(workHour.getUuid())
                         .start(workHour.getStart())
                         .end(workHour.getEnd())
+                        .accepted(workHour.isAccepted())
                         .build())
-                //.collect(Collectors.toList())
                 .toList();
     }
 
@@ -49,6 +54,7 @@ public class WorkHourService {
                 LocalDateTime.of(from, LocalTime.MIN),
                 LocalDateTime.of(to, LocalTime.MAX));
         return workHoursByStartIsBetween.stream()
+                .filter(workHour -> !workHour.isAccepted())
                 .map(workHour -> WorkHourWithUserDto.builder()
                         .workHourUuid(workHour.getUuid())
                         .workHourStart(workHour.getStart())
@@ -56,8 +62,17 @@ public class WorkHourService {
                         .userUuid(workHour.getUser().getUuid())
                         .firstName((workHour.getUser().getFirstName()))
                         .lastName(workHour.getUser().getLastName())
+                        .accepted(workHour.isAccepted())
                         .build())
                 //.collect(Collectors.toList())
                 .toList();
+    }
+
+    public void acceptHours(List<String> uuid) {
+        List<WorkHour> allByUuidIn = workHourRepository.findAllByUuidIn(uuid);
+
+        allByUuidIn.forEach(workHour -> workHour.setAccepted(true));
+
+        workHourRepository.saveAll(allByUuidIn);
     }
 }

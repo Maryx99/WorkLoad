@@ -6,7 +6,9 @@ import pl.ladziak.workload.models.WorkHour;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface WorkHourRepository extends JpaRepository<WorkHour, Long> {
     @Query(nativeQuery = true, value = """
@@ -20,4 +22,6 @@ public interface WorkHourRepository extends JpaRepository<WorkHour, Long> {
             WHERE h.start BETWEEN :from AND :to
             """)
     List<WorkHour> getWorkHoursByStartIsBetween(LocalDateTime from, LocalDateTime to);
+
+    List<WorkHour> findAllByUuidIn(Collection<String> uuid);
 }

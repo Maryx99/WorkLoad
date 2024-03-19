@@ -1,5 +1,6 @@
 package pl.ladziak.workload.exceptions.handler;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -9,9 +10,11 @@ import pl.ladziak.workload.exceptions.Error;
 import pl.ladziak.workload.exceptions.UserNotHiredException;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Error> handleRuntimeException(RuntimeException exception) {
+        log.info("{}", exception);
         return ResponseEntity.badRequest().body(buildError(exception, HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST));
     }
 

@@ -26,6 +26,11 @@ public class OrderController {
         return ResponseEntity.ok(new CreationSucessResponse(orderService.createOrder(request)));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<OrderWithUsersResponse>> getAllOrderWithUsers(@AuthenticationPrincipal User loggedUser,@RequestParam LocalDate from, @RequestParam LocalDate to) {
+        return ResponseEntity.ok(orderService.getAllOrdersWithUsers(loggedUser,from,to));
+    }
+
     @GetMapping
     public ResponseEntity<OrderResponse> getOrdersFromRangeForLoggedUser(@AuthenticationPrincipal User loggedUser, @RequestParam LocalDate from, @RequestParam LocalDate to) {
         return  ResponseEntity.ok(orderService.getOrdersFromRange(loggedUser,from, to));

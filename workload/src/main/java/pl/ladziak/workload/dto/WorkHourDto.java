@@ -10,7 +10,7 @@ import java.util.Objects;
 // konstruktor ze wszystkimi argumentami
 // jest niemutowalne - nie mozna zmienic stanu po utworzeniu
 @Builder
-public record WorkHourDto(String uuid, LocalDateTime start, LocalDateTime end) {
+public record WorkHourDto(String uuid, LocalDateTime start, LocalDateTime end, boolean accepted) {
 
 }
 

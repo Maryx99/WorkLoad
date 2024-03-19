@@ -20,8 +20,8 @@ public class WorkHourController {
     private final WorkHourService workHourService;
 
     @GetMapping
-    public List<WorkHourDto> getWorkHoursCurrentUserByUserId(@AuthenticationPrincipal User loggedUser) {
-        return workHourService.getWorkHoursCurrentUserByUserId(loggedUser.getId());
+    public List<WorkHourDto> getWorkHoursCurrentUserByUserId(@AuthenticationPrincipal User loggedUser, @RequestParam LocalDate from, @RequestParam LocalDate to) {
+        return workHourService.getWorkHoursCurrentUserByUserId(loggedUser.getId(), from, to);
     }
 
     @GetMapping("/all")
@@ -39,6 +39,12 @@ public class WorkHourController {
 //    @PreAuthorize("#uuid == #principal.uuid or hasRole('ADMIN')") // mozna to tez robic po roli
     public void aa(@AuthenticationPrincipal User principal, @PathVariable String uuid) {
         System.out.println(principal);
+    }
+
+    @PutMapping("/accept")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void acceptHours(@RequestBody List<String> uuids) {
+        workHourService.acceptHours(uuids);
     }
 
     @GetMapping("/test")
